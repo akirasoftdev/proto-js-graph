@@ -56,10 +56,6 @@
       return {valid: true, msg: null};
     }
   }
-  function buttonFormatter(row,cell,value,columnDef,dataContext) {
-      var button = "<input class='del' type='button' id='" + dataContext.id + "' value='delete'/>"
-      return button;
-  }
   function CheckboxFormatter(row, cell, value, columnDef, dataContext) {
     if (value)
       return '<input type="checkbox" name="" value="' + value + '" checked />';
@@ -93,13 +89,6 @@
   $(function() {
     grid = new Slick.Grid("#myGrid", dataView, columns, options);
     grid.setSelectionModel(new Slick.CellSelectionModel());
-    // grid.onAddNewRow.subscribe(function(e, args) {
-    //   var item = args.item;
-    //   grid.invalidateRow(data.length);
-    //   data.push(item);
-    //   grid.updateRowCount();
-    //   grid.render();
-    // });
     grid.onClick.subscribe(function(e, args) {
       if ($(e.target).is(':checkbox') && options['editable']) {
         var column = args.grid.getColumns()[args.cell];
