@@ -1,102 +1,53 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset="utf-8">
   <title>SlickGrid example 3: Editing</title>
-  <link rel="stylesheet" href="./slick.grid.css" type="text/css"/>
-  <link rel="stylesheet" href="./css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css"/>
-  <link rel="stylesheet" href="./slick.grid.css" type="text/css"/>
-  <style>
-    .cell-title {
-      font-weight: bold;
-    }
-
-    .cell-effort-driven {
-      text-align: center;
-    }
-  </style>
-  <script>
-  function onClick() {
-    console.log("");
-  }
-  </script>
+  <link rel="stylesheet" href="./slick/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="./slick/css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="./slick/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="./d3/d3.style.css" type="text/css"/>
+  <link rel="stylesheet" href="./sample.css" type="text/css"/>
 </head>
+
 <body>
-<div>
-<input type="button" value="button" onclick="onClick()">
-</div>
-<div id="graph">
-</div>
+<div id="myGraph1" style="width:600px;height:300px;"></div>
+<div id="myGraph2" style="width:600px;height:300px;"></div>
+<div id="myGraph3" style="width:600px;height:300px;"></div>
 <div style="width:600px;">
 <div id="myGrid" style="width:100%;height:500px;">
 </div>
 </div>
 
-<script src="./lib/firebugx.js"></script>
+<script src="./slick/lib/firebugx.js"></script>
+<script src="./slick/lib/jquery-1.11.2.min.js"></script>
+<script src="./slick/lib/jquery-ui-1.11.3.min.js"></script>
+<script src="./slick/lib/jquery.event.drag-2.2.js"></script>
 
-<script src="./lib/jquery-1.11.2.min.js"></script>
-<script src="./lib/jquery-ui-1.11.3.min.js"></script>
-<script src="./lib/jquery.event.drag-2.2.js"></script>
+<script src="./slick/slick.core.js"></script>
+<script src="./slick/plugins/slick.cellrangedecorator.js"></script>
+<script src="./slick/plugins/slick.cellrangeselector.js"></script>
+<script src="./slick/plugins/slick.cellselectionmodel.js"></script>
+<script src="./slick/slick.formatters.js"></script>
+<script src="./slick/slick.editors.js"></script>
+<script src="./slick/slick.grid.js"></script>
+<script src="./slick/slick.dataview.js"></script>
+<script src="./slick/myslick.js"></script>
 
-<script src="./slick.core.js"></script>
-<script src="./plugins/slick.cellrangedecorator.js"></script>
-<script src="./plugins/slick.cellrangeselector.js"></script>
-<script src="./plugins/slick.cellselectionmodel.js"></script>
-<script src="./slick.formatters.js"></script>
-<script src="./slick.editors.js"></script>
-<script src="./slick.grid.js"></script>
-<script src="./slick.dataview.js"></script>
+<script src="./d3/d3.v3.js" charset="utf-8"></script>
+<script src="./data.js"></script>
+<script src="./graph.js"></script>
+<script src="./grid.js"></script>
 
 <script>
-  function requiredFieldValidator(value) {
-    if (value == null || value == undefined || !value.length) {
-      return {valid: false, msg: "This is a required field"};
-    } else {
-      return {valid: true, msg: null};
-    }
-  }
-  function CheckboxFormatter(row, cell, value, columnDef, dataContext) {
-    if (value)
-      return '<input type="checkbox" name="" value="' + value + '" checked />';
-    else
-      return '<input type="checkbox" name="" value="' + value + '" />';
-  }
-
   var grid;
-  var data = [
-      {id:1, "date":1,"data1":2,"data2":3,"data3":4,"data4":5, del: true},
-      {id:2, "date":2,"data1":2,"data2":3,"data3":4,"data4":5, del: false}
-      ];
-  var columns = [
-    {id: "date", name: "Date", field: "date", width: 100},
-    {id: "data1", name: "Data1", field: "data1", width: 100},
-    {id: "data2", name: "Data2", field: "data2", width: 100},
-    {id: "data3", name: "Data3", field: "data3", width: 100},
-    {id: "data4", name: "Data4", field: "data4", width: 100},
-    {id: "delete", name:"Delete", field:"del", width:100, formatter: CheckboxFormatter, editor: Slick.Editors.CheckboxEditor}
-  ];
-  var options = {
-    editable: true,
-    enableAddRow: false,
-    enableCellNavigation: false,
-    asyncEditorLoading: false,
-    autoEdit: false
-  };
-  var dataView = new Slick.Data.DataView();
-  dataView.setItems(data);
-  
-  $(function() {
-    grid = new Slick.Grid("#myGrid", dataView, columns, options);
-    grid.setSelectionModel(new Slick.CellSelectionModel());
-    grid.onClick.subscribe(function(e, args) {
-      if ($(e.target).is(':checkbox') && options['editable']) {
-        var column = args.grid.getColumns()[args.cell];
-        if (column['editable'] == false || column['autoEdit'] == false)
-          return;
-        data[args.row][column.field] = !data[args.row][column.field];
-      }
-    })
+  var myData = new Data();
+
+  var myGrid = new Grid(myData.get());
+  var myGraph = new Graph(d3, myGrid);
+  myGraph.updateGraph();
+  myGrid.addChangeListener(function() {
+    myGraph.updateGraph();
   });
 </script>
 

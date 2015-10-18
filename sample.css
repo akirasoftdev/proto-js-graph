@@ -1,0 +1,17 @@
+.cell-title {
+    font-weight: bold;
+}
+
+.cell-effort-driven {
+    text-align: center;
+}
+
+.grid .tick {
+    stroke: lightgray;
+    stroke-opacity: 0.7;
+    shapre-rendering: crispEdges;
+}
+
+.grid path {
+    stroke-width: 0;
+}
